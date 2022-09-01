@@ -40,11 +40,8 @@ pipeline {
 
         stage('Setup env and config files') {
             steps {
-                withCredentials([
-                        file(credentialsId: 'demo-isaacreyna-com-servers-json', variable: 'FILE_SERVERS_JSON'),
-                        file(credentialsId: 'demo-isaacreyna-com-env', variable: 'FILE_ENV'),]) {
-                            sh 'mv "${FILE_SERVERS_JSON}" .'
-                            sh 'mv "${FILE_ENV}" .'
+                withCredentials([file(credentialsId: 'demo-isaacreyna-com-env', variable: 'FILE_ENV')]) {
+                    sh 'mv "${FILE_ENV}" .'
                 }
             }
         }
