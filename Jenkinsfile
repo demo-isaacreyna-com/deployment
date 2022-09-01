@@ -11,7 +11,7 @@ pipeline {
     environment {
         GIT_BRANCH = 'master'
         CREDENTIALS_GITHUB = 'github-isaacdanielreyna'
-        GIT_URL = 'https://github.com/IsaacDanielReyna/deployment.git'
+        GIT_URL = 'https://github.com/demo-isaacreyna-com/deployment.git'
     }
 
     stages {
