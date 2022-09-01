@@ -1,0 +1,79 @@
+version: '3.9'
+
+services:
+    postgres:
+        image: postgres:13
+        container_name: postgres
+        hostname: postgres
+        ports:
+            - '${DATABASE_PORT}:5432'
+        environment:
+            POSTGRES_HOST: ${DATABASE_HOST:-postgres}
+            POSTGRES_USER: ${DATABASE_USER}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_DB}
+        volumes:
+            - ./initialize-database.sh:/docker-entrypoint-initdb.d/initdb.sh
+        profiles:
+            - database
+            - keycloak
+            - backend
+            - all
+    keycloak:
+        image: bitnami/keycloak:latest
+        container_name: keycloak
+        environment:
+            KEYCLOAK_DATABASE_HOST: ${DATABASE_HOST:-postgres}
+            KEYCLOAK_DATABASE_PORT: ${DATABASE_PORT:-5432}
+            KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_DATABASE_NAME}
+            KEYCLOAK_DATABASE_USER: ${KEYCLOAK_DATABASE_USER}
+            KEYCLOAK_DATABASE_PASSWORD: ${KEYCLOAK_DATABASE_PASSWORD}
+        ports:
+            - '8080:8080'
+        depends_on:
+            - 'postgres'
+        profiles:
+            - keycloak
+            - all
+    pgadmin:
+        image: dpage/pgadmin4:latest
+        container_name: pgadmin
+        ports:
+            - '5433:80'
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+        volumes:
+            - ./servers.json:/pgadmin4/servers.json
+        depends_on:
+            - 'postgres'
+        profiles:
+            - database
+            - keycloak
+            - frontend
+            - all
+    react:
+        image: isaacdanielreyna/react-sandbox:0.1.0
+        container_name: react
+        ports:
+            - '1337:80'
+        depends_on:
+            - 'postgres'
+        profiles:
+            - frontend
+            - all
+    django:
+        image: isaacdanielreyna/django:0.1.0
+        container_name: django
+        ports:
+            - '8000:8000'
+        environment:
+            POSTGRES_HOST: ${DATABASE_HOST:-postgres}
+            POSTGRES_USER: ${DATABASE_USER}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_DB:-postgres}
+        depends_on:
+            - 'postgres'
+        profiles:
+            - backend
+            - all
