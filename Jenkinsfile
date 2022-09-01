@@ -50,7 +50,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                ./demo.isaacreyna.com.sh
+                sh './demo.isaacreyna.com.sh'
             }
         }
     }
