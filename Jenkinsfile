@@ -56,12 +56,12 @@ pipeline {
         always {
             echo 'Delete the following files'
             sh 'ls -hal'
-            deleteDir()
-            sh 'ls -hal'
         }
         
         success {
             echo "Job Succeded"
+            deleteDir()
+            sh 'ls -hal'
         }
 
         unsuccessful {
