@@ -41,7 +41,7 @@ pipeline {
         stage('Setup env and config files') {
             steps {
                 withCredentials([file(credentialsId: 'demo-isaacreyna-com-env', variable: 'FILE_ENV')]) {
-                    sh 'mv "${FILE_ENV}" .'
+                    sh 'mv "${FILE_ENV}" .env'
                 }
             }
         }
