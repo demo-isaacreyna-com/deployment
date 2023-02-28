@@ -28,12 +28,19 @@ services:
             KEYCLOAK_DATABASE_NAME: ${KEYCLOAK_DATABASE_NAME}
             KEYCLOAK_DATABASE_USER: ${KEYCLOAK_DATABASE_USER}
             KEYCLOAK_DATABASE_PASSWORD: ${KEYCLOAK_DATABASE_PASSWORD}
+            KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+            KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+            KEYCLOAK_EXTRA_ARGS: '-Dkeycloak.import=/config/realm.json'
+        volumes:
+            - ./keycloak-realm.json:/config/realm.json
         ports:
             - '8080:8080'
         depends_on:
             - 'postgres'
         profiles:
             - keycloak
+            - backend
+            - frontend
             - all
     pgadmin:
         image: dpage/pgadmin4:latest
@@ -77,3 +84,6 @@ services:
         profiles:
             - backend
             - all
+networks:
+    default:
+        name: demo_network
